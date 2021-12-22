@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>One (gg)plot(2) to rule them all</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Marcus Becker" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# One (gg)plot(2) to rule them all
+## <html>
+<div style="float:left">
+
+</div>
+<hr color='#EB811B' size=1px width=796px>
+</html>
+### Marcus Becker
+
+---
+
+
+
+
+&lt;style type="text/css"&gt;
+/* custom.css */
+.left-code {
+  color: #777;
+  width: 40%;
+  height: 92%;
+  float: left;
+}
+.left-code-less {
+  color: #777;
+  width: 25%;
+  height: 92%;
+  float: left;
+}
+.right-plot {
+  width: 58%;
+  float: right;
+  padding-left: 1%;
+}
+.right-plot-more {
+  width: 65%;
+  float: right;
+  padding-left: 1%;
+}
+.plot-callout {
+  height: 225px;
+  width: 450px;
+  bottom: 5%;
+  right: 5%;
+  position: absolute;
+  padding: 0px;
+  z-index: 100;
+}
+.plot-callout img {
+  width: 100%;
+  border: 4px solid #23373B;
+}
+&lt;/style&gt;
+
+# Outline
+&lt;br&gt;
+## [Introduction](#intro)
+
+&lt;br&gt;
+####Some musings from me about learning data vis in {ggplot2}.
+
+--
+&lt;br&gt;
+## [We're going to build a plot.](#plot)
+
+&lt;br&gt;
+####It will be fun. 
+
+---
+
+class: inverse, center, middle
+name: intro
+
+# Introduction
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# What is ggplot2?
+
+.pull-left[
++ The **gg** stands for the [**grammar of graphics**](https://link.springer.com/book/10.1007/0-387-28695-0).
+
++ **ggplot2** is an R package written by Hadley Wickham, and is an implementation of the book written by Leland Irving.
+
++ All the cool kids use it. 
+]
+--
+.pull-right[
+&lt;img src="pics/hadley-tweet.PNG" height = 475 width = 400&gt;
+]
+---
+
+# Here's the grammar (in brief ...)
+
+## 1. **Data** - without data, you don't have a plot!
+
+---
+count:false
+# Here's the grammar (in brief ...)
+
+#### 1. **Data** - without data, you don't have a plot!
+## 2. &lt;span style="color:#D24C39"&gt;**Mapping**&lt;/span&gt; - linking variables to graphical properties.
+
+---
+count:false
+# Here's the grammar (in brief ...)
+
+#### 1. **Data** - without data, you don't have a plot!
+#### 2. &lt;span style="color:#D24C39"&gt;**Mapping**&lt;/span&gt; - linking variables to graphical properties.
+## 3. &lt;span style="color:#268DC7"&gt;**Statistics**&lt;/span&gt; - compute/transform numbers for us.
+
+---
+count:false
+# Here's the grammar (in brief ...)
+
+#### 1. **Data** - without data, you don't have a plot!
+#### 2. &lt;span style="color:#D24C39"&gt;**Mapping**&lt;/span&gt; - linking variables to graphical properties.
+#### 3. &lt;span style="color:#268DC7"&gt;**Statistics**&lt;/span&gt; - compute/transform numbers for us.
+## 4. &lt;span style="color:#F79A2F"&gt;**Scales**&lt;/span&gt; - interpret values in data to graphical properties.
+
+---
+count:false
+# Here's the grammar (in brief ...)
+
+#### 1. **Data** - without data, you don't have a plot!
+#### 2. &lt;span style="color:#D24C39"&gt;**Mapping**&lt;/span&gt; - linking variables to graphical properties.
+#### 3. &lt;span style="color:#268DC7"&gt;**Statistics**&lt;/span&gt; - compute/transform numbers for us.
+#### 4. &lt;span style="color:#F79A2F"&gt;**Scales**&lt;/span&gt; - interpret values in data to graphical properties.
+## 5. &lt;span style="color:#86B359"&gt;**Geometries**&lt;/span&gt; - interpret aesthetics as graphical representations.
+
+---
+count:false
+# Here's the grammar (in brief ...)
+
+#### 1. **Data** - without data, you don't have a plot!
+#### 2. &lt;span style="color:#D24C39"&gt;**Mapping**&lt;/span&gt; - linking variables to graphical properties.
+#### 3. &lt;span style="color:#268DC7"&gt;**Statistics**&lt;/span&gt; - compute/transform numbers for us.
+#### 4. &lt;span style="color:#F79A2F"&gt;**Scales**&lt;/span&gt; - interpret values in data to graphical properties.
+#### 5. &lt;span style="color:#86B359"&gt;**Geometries**&lt;/span&gt; - interpret aesthetics as graphical representations.
+## 6. &lt;span style="color:#FFE784"&gt;**Facets**&lt;/span&gt; - split plot into panels.
+
+---
+count:false
+# Here's the grammar (in brief ...)
+
+#### 1. **Data** - without data, you don't have a plot!
+#### 2. &lt;span style="color:#D24C39"&gt;**Mapping**&lt;/span&gt; - linking variables to graphical properties.
+#### 3. &lt;span style="color:#268DC7"&gt;**Statistics**&lt;/span&gt; - compute/transform numbers for us.
+#### 4. &lt;span style="color:#F79A2F"&gt;**Scales**&lt;/span&gt; - interpret values in data to graphical properties.
+#### 5. &lt;span style="color:#86B359"&gt;**Geometries**&lt;/span&gt; - interpret aesthetics as graphical representations.
+#### 6. &lt;span style="color:#FFE784"&gt;**Facets**&lt;/span&gt; - split plot into panels.
+## 7. &lt;span style="color:#D03461"&gt;**Coordinates**&lt;/span&gt; - define physical mapping.
+
+---
+count:false
+# Here's the grammar (in brief ...)
+
+#### 1. **Data** - without data, you don't have a plot!
+#### 2. &lt;span style="color:#D24C39"&gt;**Mapping**&lt;/span&gt; - linking variables to graphical properties.
+#### 3. &lt;span style="color:#268DC7"&gt;**Statistics**&lt;/span&gt; - compute/transform numbers for us.
+#### 4. &lt;span style="color:#F79A2F"&gt;**Scales**&lt;/span&gt; - interpret values in data to graphical properties.
+#### 5. &lt;span style="color:#86B359"&gt;**Geometries**&lt;/span&gt; - interpret aesthetics as graphical representations.
+#### 6. &lt;span style="color:#FFE784"&gt;**Facets**&lt;/span&gt; - split plot into panels.
+#### 7. &lt;span style="color:#D03461"&gt;**Coordinates**&lt;/span&gt; - define physical mapping.
+## 8. &lt;span style="color:#398E9A"&gt;**Theme**&lt;/span&gt; - what does your plot look like?
+
+---
+count:false
+# Here's the grammar (in brief ...)
+
+#### 1. **Data** - without data, you don't have a plot!
+####2. &lt;span style="color:#D24C39"&gt;**Mapping**&lt;/span&gt; - linking variables to graphical properties.
+#### 3. &lt;span style="color:#268DC7"&gt;**Statistics**&lt;/span&gt; - compute/transform numbers for us.
+#### 4. &lt;span style="color:#F79A2F"&gt;**Scales**&lt;/span&gt; - interpret values in data to graphical properties.
+#### 5. &lt;span style="color:#86B359"&gt;**Geometries**&lt;/span&gt; - interpret aesthetics as graphical representations.
+#### 6. &lt;span style="color:#FFE784"&gt;**Facets**&lt;/span&gt; - split plot into panels.
+#### 7. &lt;span style="color:#D03461"&gt;**Coordinates**&lt;/span&gt; - define physical mapping.
+#### 8. &lt;span style="color:#398E9A"&gt;**Theme**&lt;/span&gt; - what does your plot look like?
+
+---
+# My advice
+
+### Find data you're interested in.
+
+&lt;br&gt;
+### Find code for plots you like, then experiment.
+
+---
+# My advice
+
+### [You're going to suck.](https://www.youtube.com/watch?v=8SGif63VW6E&amp;t=246s)
+
+--
+&lt;br&gt;
+&lt;div align="center"&gt;
+&lt;img src="pics/hadley_suck.gif" height = 400&gt;
+&lt;/div&gt;
+
+---
+class: inverse, center, middle
+name: plot
+
+# Let's plot. 
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# First, a wholesome meme.
+&lt;div align="center"&gt;
+
+&lt;img src="pics/mister-rogers.PNG" height = 550&gt;
+&lt;/div&gt;
+---
+
+# Tidy Tuesday
+
+### We'll need some data as a starting point. 
+
+--
+
++ Let's use a dataset from the [Tidy Tuesday](https://github.com/rfordatascience/tidytuesday)
+
++ Remember, find something interesting to **you**!
+--
+
++ I'm going to choose the data on [Ultra Trail Running](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-10-26/readme.md)
+
+---
+
+# Obtain data
+
+
+```r
+library(tidytuesdayR)
+
+# Obtain data
+*ultra_running &lt;- tidytuesdayR::tt_load(x = 2021, week = 44)
+```
+
+```
+## 
+## 	Downloading file 1 of 2: `ultra_rankings.csv`
+## 	Downloading file 2 of 2: `race.csv`
+```
+
+```r
+# It's a list object, with two elements: "ultra_rankings" and "race"
+names(ultra_running)
+```
+
+```
+## [1] "ultra_rankings" "race"
+```
+
+```r
+# Pull those two elements out into separate objects
+ultra_rankings &lt;- ultra_running[["ultra_rankings"]]
+race &lt;- ultra_running[["race"]]
+```
+
+---
+
+# What are our questions?
+
+1. Which countries have the most ultra trail runners?
+
+--
+
+2. How has participation increased over time?
+
+--
+
+3. Have there been increases in female participation over time?
+
+--
+
+4. How does the gender pace gap decrease over distance?
+
+---
+count:false
+# What are our questions?
+
+1. **Which countries have the most ultra trail runners?**
+
+&lt;br&gt;
+&lt;br&gt;
+### We're going to make the data simple for this session.
+
+---
+
+# A quick aside
+
+### What is [**Tidy** data](https://r4ds.had.co.nz/tidy-data.html)? 
+
+&lt;br&gt;
+A few basic rules:
+1. Each variable must have its own column.
+2. Each observation must have its own row.
+3. Each value must have its own cell. 
+
+--
+
+### ggplot2 is going to expect to be fed with tidy data.
+
+---
+
+# Top Countries
+
+.code[
+
+```r
+# We'll use the dplyr package for some basic wrangling.
+library(dplyr)
+
+# Using the ultra_rankings dataframe
+runners_per_nation &lt;- ultra_rankings %&gt;%
+  # Only care about the runner and nationality columns
+  select(runner, nationality) %&gt;%
+  # Obtain distinct combinations
+  distinct() %&gt;%
+  # Count the number of runners from each country
+  group_by(nationality) %&gt;%
+  tally(name = "number") %&gt;%
+  arrange(desc(number)) %&gt;%
+  ungroup()
+```
+]
+---
+
+# Top Countries
+
+.pull-left[
+
+```r
+*head(runners_per_nation, n = 15)
+```
+]
+
+.pull-right[
+
+```
+## # A tibble: 15 x 2
+##    nationality number
+##    &lt;chr&gt;        &lt;int&gt;
+##  1 USA          20345
+##  2 FRA          17420
+##  3 GBR           5778
+##  4 JPN           3817
+##  5 ESP           3587
+##  6 CHN           3187
+##  7 ITA           1796
+##  8 CAN           1427
+##  9 POL           1073
+## 10 ARG           1060
+## 11 SWE           1055
+## 12 AUS           1024
+## 13 GER            973
+## 14 RUS            886
+## 15 BEL            756
+```
+
+]
+
+---
+
+# First crack at it
+
+.left-code[
+
+```r
+library(ggplot2)
+
+*ggplot(
+  data = runners_per_nation,
+  # geom_bar() requires both 
+  # and y mapped
+  mapping = aes(x = nationality, 
+                y = number)) +
+  # Raw counts
+  geom_bar(stat = "identity")
+```
+]
+---
+
+# First crack at it
+
+.left-code[
+
+```r
+library(ggplot2)
+
+ggplot(
+* data = runners_per_nation,
+  # geom_bar() requires both 
+  # and y mapped
+  mapping = aes(x = nationality, 
+                y = number)) +
+  # Raw counts
+  geom_bar(stat = "identity")
+```
+]
+
+---
+
+# First crack at it
+
+.left-code[
+
+```r
+library(ggplot2)
+
+ggplot(
+  data = runners_per_nation,
+  # geom_bar() requires both 
+  # and y mapped
+* mapping = aes(x = nationality,
+*               y = number)) +
+  # Raw counts
+  geom_bar(stat = "identity")
+```
+]
+
+---
+
+# First crack at it
+
+.left-code[
+
+```r
+library(ggplot2)
+
+ggplot(
+  data = runners_per_nation,
+  # geom_bar() requires both 
+  # and y mapped
+  mapping = aes(x = nationality, 
+                y = number)) +
+  # Raw counts 
+* geom_bar(stat = "identity")
+```
+]
+
+--
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Global vs. geom-specific mapping
+
+.left-code[
+
+```r
+ggplot(
+  data = runners_per_nation) +
+  geom_bar(
+    mapping = aes(
+*     x = nationality,
+*     y = number),
+    stat = "identity") 
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Let's use geom_col() instead
+
+.left-code[
+
+```r
+ggplot(
+  data = runners_per_nation) +
+* geom_col(
+    mapping = aes(
+      x = nationality,
+      y = number))
+  # Shortcut 
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Let's look at the top 10
+
+
+```r
+top10 &lt;- runners_per_nation %&gt;%
+  slice_max(number, n = 10)
+
+*# Aside: how many runners is this of the total?
+
+runners_per_nation %&gt;%
+  mutate(prop = round(prop.table(number), digits = 2)) %&gt;%
+  slice_max(number, n = 10) %&gt;%
+  summarise(prop_top_10 = sum(prop))
+```
+
+```
+## # A tibble: 1 x 1
+##   prop_top_10
+##         &lt;dbl&gt;
+## 1        0.78
+```
+
+--
+&lt;br&gt;
+
+78% of the runners hail from the top 10 countries. 
+
+---
+
+# Let's look at the top 10
+
+.left-code[
+
+```r
+*ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number))
+
+# More informative!
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Order can be a visual aid
+
+.left-code[
+
+```r
+*library(forcats)
+
+top10 &lt;- top10 %&gt;%
+  mutate(
+*   nationality = fct_reorder(
+*     nationality,
+*     number,
+*     .desc = TRUE
+    )
+  )
+
+ggplot(data = top10) +
+  geom_col(
+    mapping = aes(
+      x = nationality,
+      y = number))
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Colour!
+
+&lt;br&gt;
+### Do we want to map a **specific property of the data** onto the *colour aesthetic*?
+
+--
+
+&lt;br&gt;
+### Or, do we just want to add colour because we like it, not because the data dictates it?
+
+--
+
+&lt;br&gt;
+### Both are valid!
+
+---
+
+# Colour aesthetic
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+      # Within aes()
+      # Simple expression
+*     colour = number &gt; 10000))
+```
+]
+
+--
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Fill (sorry!) aesthetic
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+# We actually wanted fill 
+# in this case
+*     fill = number &gt; 10000))
+```
+]
+
+--
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Fill aesthetic
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+      fill = number &gt; 10000)) +
+* scale_fill_manual(
+*   values = c("steelblue",
+*              "darkred")
+  )
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Fill aesthetic - continuous
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+*     fill = number))
+```
+]
+
+--
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Fill aesthetic - continuous
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+      fill = number)) +
+* scale_fill_gradient(
+*   low = "#c6dbef",
+*   high = "#08306b"
+  )
+```
+]
+
+--
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-18-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Fill aesthetic - continuous
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+      fill = number)) +
+  # More exotic
+* scale_fill_viridis_c(
+*   direction = -1
+  )
+```
+]
+
+--
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-19-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Considerations
+
+&lt;br&gt;
+### Is this colour (fill) an effective visual aid?
+
+&lt;br&gt;
+### Is it communicating something important to the audience?
+
+&lt;br&gt;
+### Is there redundancy in the plot?
+
+---
+
+# Fill aesthetic - discrete
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+      # No longer continuous
+*     fill = nationality)
+  )
+```
+]
+
+--
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-20-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Fill aesthetic - discrete
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+      fill = nationality)) +
+* theme(legend.position = "none")
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-21-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Fill aesthetic - discrete
+
+.left-code[
+
+```r
+library(RColorBrewer)
+
+ggplot(
+  filter(top10, 
+         number &lt; 10000)) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+      fill = nationality)) +
+* scale_fill_brewer(
+*   palette = "Dark2") +
+  theme(legend.position = "none")
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-22-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Single (fill) colour
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+      y = number,
+*     fill = "steelblue"))
+```
+]
+
+--
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-23-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+**Crap.**
+
+---
+
+# Single (fill) colour - not related to data
+
+.left-code[
+
+```r
+ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+      x = nationality,
+*     y = number),
+*     fill = "steelblue")
+# No legend in this case.
+
+# Nothing to communicate
+# about the fill.
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Part 2
+
+OK, we have the basics of the plot. What else can we do?
+
+--
+
+Here are some ideas to run through:
+
++ Flip coordinates
++ Re-jig the axis labels and text
++ Add a title, maybe a caption
++ Explore different themes
++ Use more informative colours to tell a story
++ Add text labels
++ Improve various aesthetics
+
+---
+
+# Better labeling
+
+
+```r
+library(countrycode)
+
+top10 &lt;- top10 %&gt;%
+  mutate(full_nm = countrycode(nationality,
+                               origin = "iso3c",
+                               destination = "country.name"),
+         full_nm = fct_reorder(full_nm,
+                               number,
+                               .desc = FALSE))
+
+head(top10)
+```
+
+```
+## # A tibble: 6 x 3
+##   nationality number full_nm       
+##   &lt;fct&gt;        &lt;int&gt; &lt;fct&gt;         
+## 1 USA          20345 United States 
+## 2 FRA          17420 France        
+## 3 GBR           5778 United Kingdom
+## 4 JPN           3817 Japan         
+## 5 ESP           3587 Spain         
+## 6 CHN           3187 China
+```
+
+---
+
+# Base plot
+
+.left-code[
+
+```r
+plot1 &lt;- ggplot(data = top10) +
+  geom_col( 
+    mapping = aes(
+*     x = full_nm,
+      y = number))
+
+plot1
+```
+]
+
+--
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-26-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Flip coordinates
+
+.left-code[
+
+```r
+plot1 +
+  coord_flip()
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-27-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Add title(s), remove axis labels
+
+.left-code[
+
+```r
+plot1 +
+  coord_flip() +
+* labs(
+*   title = "Top 10 countries with most ultra runners",
+*   subtitle = "In races held between 2012-2021.") +
+* scale_y_continuous(
+*   labels = scales::comma) +
+* theme(
+*   axis.title.x = element_blank(),
+*   axis.title.y = element_blank())
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-28-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Informative (fill) colours
+
+
+```r
+library(stringr)
+
+# Maybe we want to highlight certain countries.
+top10 &lt;- top10 %&gt;%
+  mutate(group = case_when(
+    str_detect(nationality, "FRA|GBR|ESP|ITA|POL") ~ "Europe",
+    nationality == "CAN" ~ "Canada",
+    TRUE ~ "Other"
+  ))
+
+# New base plot ...
+plot2 &lt;- ggplot(top10) +
+* geom_col(aes(x = full_nm, y = number, fill = group)) +
+  coord_flip() +
+  labs(title = "Top 10 countries with most ultra runners",
+       subtitle = "In races held between 2012-2021.") + 
+  scale_y_continuous(labels = scales::comma)
+```
+
+---
+
+# Informative (fill) colours
+
+.left-code[
+
+```r
+plot2 + 
+* scale_fill_manual(
+*   values = c(
+*     "Europe" = "steelblue",
+*     "Canada" = "#FF0000",
+*     "Other" = "grey60"),
+*   name = NULL) +
+  theme(
+*   legend.position = "bottom",
+*   axis.title = element_blank()
+  )
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-29-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# We can do better than a legend.
+
+
+```r
+# Let's write some cool text.
+library(ggtext)
+
+# About what?
+top10 %&gt;%
+  group_by(group) %&gt;%
+  summarise(total_runners = sum(number)) %&gt;%
+  mutate(prop = prop.table(total_runners))
+```
+
+```
+## # A tibble: 3 x 3
+##   group  total_runners   prop
+##   &lt;chr&gt;          &lt;int&gt;  &lt;dbl&gt;
+## 1 Canada          1427 0.0240
+## 2 Europe         29654 0.498 
+## 3 Other          28409 0.478
+```
+
+```r
+cool_text &lt;- '&lt;span style="color:#4682b4;"&gt;**European**&lt;/span&gt; countries&lt;br&gt;account for 49.8% of all runners&lt;br&gt;among the top 10 countries.&lt;br&gt;&lt;br&gt;There have been&lt;br&gt;1,427 ultra runners from &lt;span style="color:#FF0000;"&gt;**Canada**&lt;/span&gt;.'
+```
+
+---
+
+# We can do better than a legend.
+
+.left-code[
+
+```r
+plot2 + 
+* annotate(
+*   geom = "richtext",
+*   x = 6, y = 14500,
+*   label = cool_text,
+*   label.colour = NA, fill = NA,
+*   fontface = "bold",
+*   color = "grey20",
+*   size = 3.5
+  ) +
+  scale_fill_manual(
+    values = c( 
+      "Europe" = "steelblue",
+      "Canada" = "#FF0000",
+      "Other" = "grey60"),
+    name = NULL) +
+* theme_minimal() +
+  theme(
+*   legend.position = "none",
+    axis.title = element_blank())
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-31-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Let's try text labels.
+
+
+```r
+# Going to re-do the whole plot ... getting complicated!!
+plot1 &lt;- ggplot(top10) +
+  geom_col(aes(x = full_nm, y = number, fill = group)) +
+* geom_text(aes(y = number + 1000, x = full_nm, colour = group,
+*               label = scales::comma(number)), size = 3) +
+  annotate(geom = "richtext", x = 6, y = 14500, label = cool_text, label.colour = NA, 
+           fill = NA, fontface = "bold", color = "grey20", size = 3.5) +
+  labs(title = "Top 10 countries with most ultra runners",
+       subtitle = "In races held between 2012-2021.") + 
+* scale_y_continuous(expand = c(0, 150)) +
+  scale_fill_manual(values = c("Europe" = "steelblue", "Canada" = "#FF0000",
+                               "Other" = "grey50"), name = NULL) +
+  scale_color_manual(values = c("Europe" = "steelblue", "Canada" = "#FF0000",
+                                "Other" = "grey50"), name = NULL) +
+  coord_flip() +
+  theme_classic() +
+  theme(axis.title = element_blank(),
+        axis.text.x = element_blank(), axis.text.y = element_text(face = "bold"),
+        legend.position = "none",
+*       panel.grid = element_blank(),
+*       axis.ticks = element_blank(), axis.line = element_blank())
+```
+
+---
+
+# The product
+
+.left-code-less[
+
+```r
+plot1
+```
+]
+
+.right-plot-more[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-33-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Final options
+
+.left-code[
+
+```r
+# Let's change the fonts and add a caption
+# sysfonts::font_add_google("Montserrat")
+showtext::showtext_auto()
+
+plot1 +
+* labs(
+*   caption = "Data from #TidyTuesday project. Plot by M.Becker.") +
+* theme(
+    text = element_text(
+*     family = "Montserrat"))
+```
+]
+
+.right-plot[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-34-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# gg after dark
+
+
+```r
+library(ggdark)
+last_plot1 &lt;- ggplot(top10) +
+  geom_col(aes(x = full_nm, y = number, fill = group)) +
+  geom_text(aes(y = number + 1000, x = full_nm, label = scales::comma(number)), 
+*           size = 3, family = "Montserrat", color = "white") +
+  annotate(geom = "richtext", x = 6, y = 14500, label = cool_text, label.colour = NA, 
+*          fill = NA, fontface = "bold", color = "white", size = 3.5,
+*          family = "Montserrat")
+```
+
+---
+
+# gg after dark
+
+
+```r
+last_plot2 &lt;- last_plot1 +
+  labs(title = "Top 10 countries with most ultra runners",
+       subtitle = "In races held between 2012-2021.",
+*      caption = "Data from #TidyTuesday project. Plot by M.Becker.") +
+  scale_y_continuous(expand = c(0, 150)) +
+  scale_fill_manual(values = c("Europe" = "steelblue", "Canada" = "#FF0000",
+                               "Other" = "grey50"), name = NULL) +
+  scale_color_manual(values = c("Europe" = "steelblue", "Canada" = "#FF0000",
+                                "Other" = "grey50"), name = NULL) +
+  coord_flip() +
+* dark_theme_classic() +
+  theme(axis.title = element_blank(),
+        axis.text.x = element_blank(), axis.text.y = element_text(face = "bold"),
+        legend.position = "none",
+        panel.grid = element_blank(),
+        axis.ticks = element_blank(), axis.line = element_blank(),
+*       text = element_text(family = "Montserrat", color = "white"))
+```
+
+---
+
+# gg after dark
+
+.left-code-less[
+
+```r
+last_plot2
+```
+]
+
+.right-plot-more[
+&lt;img src="ggplot2-intro_2021-12-16_files/figure-html/unnamed-chunk-37-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"hightlightSpans": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
